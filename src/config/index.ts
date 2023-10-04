@@ -2,6 +2,7 @@ import { GatewayIntentBits, Client, Partials} from 'discord.js';
 import { SlashCommandStringOption, SlashCommandBuilder } from '@discordjs/builders';
 import { cmdArr } from './commands';
 import getError from '../utils/get-error';
+import { getSingle } from '../scraper';
 
 const client = new Client({
     intents: [
@@ -50,6 +51,34 @@ client.once('ready', async () => {
     } catch (err) {
         const errMsg = getError(err);
         throw new Error(errMsg);
+    }
+});
+
+client.on('interactionCreate', async (interaction) => {
+    if (!interaction.isCommand()) return;
+    
+    const { commandName, options } = interaction;
+    
+    switch (commandName) {
+        case 'ping':
+            await interaction.reply('Pong!');
+        break;
+
+        case 'help':
+        break;
+
+        case 'updated':
+            const title = options.data[0].value?.toString().trim();
+            await interaction.reply(`Checking for updates on ${title}`);
+            return console.log(title);
+            await getSingle(interaction, options);
+        break;
+
+        case 'check-follow':
+        break;
+
+        default:
+        break;
     }
 });
 

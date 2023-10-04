@@ -13,3 +13,6 @@ app.listen(port, () => {
     console.log(`\x1b[35m> Ready!\x1b[0m Server running on port ${port}`)
     clientStart()
 })
+
+import { getSingle } from './scraper'
+// getSingle('Vampeerz');

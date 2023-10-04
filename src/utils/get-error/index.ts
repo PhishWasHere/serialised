@@ -10,7 +10,7 @@ const getError = (err: unknown): string => { // func to return err as string
     } msg = 'Unknown error';
 
     console.error(`\x1b[31m> Server error: \x1b[0m`, msg);
-    console.error(`\x1b[33m> `, err, `\x1b[0m`);
+    console.error(`\x1b[33m> Stack: \x1b[0m`, err);
     
     return msg;
 };
