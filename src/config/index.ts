@@ -3,6 +3,7 @@ import { SlashCommandStringOption, SlashCommandBuilder } from '@discordjs/builde
 import { cmdArr } from './commands';
 import getError from '../utils/get-error';
 import { getSingle } from '../scraper';
+import { embedBuilder } from '../utils/discord-res/embed';
 
 const client = new Client({
     intents: [
@@ -25,7 +26,13 @@ export const clientStart = async () => {
     }
 };
 
-const commandBuilder = (cmdArr: any[]) => {    
+type cmdType = {
+    name: string,
+    description: string,
+    options?: SlashCommandStringOption[],
+};
+
+const commandBuilder = (cmdArr: cmdType[]) => {    
     const cmdArrBuilder: SlashCommandBuilder[] = [];
     for (const command of cmdArr) {
         const cmd = new SlashCommandBuilder()
@@ -45,7 +52,14 @@ const commandBuilder = (cmdArr: any[]) => {
 client.once('ready', async () => {
     console.log(`\x1b[35m> Ready!\x1b[0m Logged in as ${client.user?.tag}`);
     try {
+        const commands = await client.application?.commands.fetch();
+        commands?.forEach(async (cmd) => {
+            console.log(`\x1b[31m> Deleting\x1b[0m: ${cmd.name}`);
+            await client.application?.commands.delete(cmd);
+        });
+
         commandBuilder(cmdArr).forEach(async (cmd) => {
+            console.log(`\x1b[94m> Creating\x1b[0m: ${cmd.name}`);
             await client.application?.commands.create(cmd);
         });
     } catch (err) {
@@ -54,31 +68,45 @@ client.once('ready', async () => {
     }
 });
 
+type resType = {
+    title: string,
+    description: string,
+    success?: boolean | undefined,
+    err?: boolean | undefined,
+    warn?: boolean | undefined,
+}
+
 client.on('interactionCreate', async (interaction) => {
-    if (!interaction.isCommand()) return;
+    try {
+        if (!interaction.isCommand()) return;
     
-    const { commandName, options } = interaction;
+        const { commandName, options } = interaction;
+        
+        switch (commandName) {
+            case 'ping':
+                await interaction.reply({embeds: [embedBuilder('Pong!', 'Pong!')]})
+            break;
     
-    switch (commandName) {
-        case 'ping':
-            await interaction.reply('Pong!');
-        break;
-
-        case 'help':
-        break;
-
-        case 'updated':
-            const title = options.data[0].value?.toString().trim();
-            await interaction.reply(`Checking for updates on ${title}`);
-            return console.log(title);
-            await getSingle(interaction, options);
-        break;
-
-        case 'check-follow':
-        break;
-
-        default:
-        break;
+            case 'help':
+            break;
+    
+            case 'updated':
+                const title = options.data[0].value?.toString().trim();
+                await interaction.reply({embeds: [embedBuilder('Checking...', `Checking for updates on ${title}`)]});
+                const res: resType = (await getSingle(interaction, title!)) || { title: 'Error', description: 'Something went wrong', err: true };
+                
+                await interaction.editReply({embeds: [embedBuilder(res.title, res.description, res.success, res.err, res.warn)]});
+            break;
+    
+            case 'check-follow':
+            break;
+    
+            default:
+            break;
+        }
+    } catch (err) {
+        const errMsg = getError(err);
+        throw new Error(errMsg);
     }
 });
 
