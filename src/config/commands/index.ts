@@ -22,5 +22,26 @@ export const cmdArr = [
     {
       name: 'check-follow',
       description: 'checks your follow list to see if any manga is updated/being updated on MangaDex',
+      options: [
+        new SlashCommandStringOption()
+          .setName('username')
+          .setDescription('Your MangaDex username')
+          .setRequired(true),
+        
+        new SlashCommandStringOption()
+          .setName('password')
+          .setDescription('Your MangaDex password')
+          .setRequired(true),
+      ]
     },
+    // {
+    //   name: 'check-list',
+    //   description: 'checks a MangaDex list to see if any manga is updated/being updated on MangaDex (the list must be public)',
+    //   options: [
+    //     new SlashCommandStringOption()
+    //       .setName('list link')
+    //       .setDescription('The link for the public list')
+    //       .setRequired(true),
+    //   ]
+    // }
 ];

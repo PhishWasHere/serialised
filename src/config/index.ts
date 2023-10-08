@@ -52,13 +52,13 @@ const commandBuilder = (cmdArr: cmdType[]) => {
 client.once('ready', async () => {
     console.log(`\x1b[35m> Ready!\x1b[0m Logged in as ${client.user?.tag}`);
     try {
-        const commands = await client.application?.commands.fetch();
-        commands?.forEach(async (cmd) => {
-            console.log(`\x1b[31m> Deleting\x1b[0m: ${cmd.name}`);
-            await client.application?.commands.delete(cmd);
-        });
+        const commands = await client.application?.commands.fetch();//gets commands, then deletes them on start
+        // commands?.forEach(async (cmd) => {
+        //     console.log(`\x1b[31m> Deleting\x1b[0m: ${cmd.name}`);
+        //     await client.application?.commands.delete(cmd);
+        // });
 
-        commandBuilder(cmdArr).forEach(async (cmd) => {
+        commandBuilder(cmdArr).forEach(async (cmd) => { //creates commands
             console.log(`\x1b[94m> Creating\x1b[0m: ${cmd.name}`);
             await client.application?.commands.create(cmd);
         });
@@ -71,9 +71,11 @@ client.once('ready', async () => {
 type resType = {
     title: string,
     description: string,
+    image?: string | undefined,
     success?: boolean | undefined,
     err?: boolean | undefined,
     warn?: boolean | undefined,
+    other?: boolean | undefined,
 }
 
 client.on('interactionCreate', async (interaction) => {
@@ -95,10 +97,13 @@ client.on('interactionCreate', async (interaction) => {
                 await interaction.reply({embeds: [embedBuilder('Checking...', `Checking for updates on ${title}`)]});
                 const res: resType = (await getSingle(interaction, title!)) || { title: 'Error', description: 'Something went wrong', err: true };
                 
-                await interaction.editReply({embeds: [embedBuilder(res.title, res.description, res.success, res.err, res.warn)]});
+                await interaction.editReply({embeds: [embedBuilder(res.title, res.description, res.image, res.success, res.err, res.warn)]});
             break;
     
             case 'check-follow':
+            break;
+
+            case 'check-list':
             break;
     
             default:
