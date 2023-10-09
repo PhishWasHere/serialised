@@ -3,7 +3,7 @@ import express from 'express'
 
 import { clientStart } from './config'
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT
 
 const app = express()
 app.use(express.json())
@@ -14,5 +14,5 @@ app.listen(port, () => {
     clientStart()
 })
 
-import { getSingle } from './scraper'
+import { getSingle } from './scraper/get-single'
 // getSingle('Vampeerz');

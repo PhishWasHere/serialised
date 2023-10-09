@@ -1,12 +1,11 @@
-import getError from '../utils/get-error';
+import getError from '../../utils/get-error';
 import { Manganato } from '@specify_/mangascraper'
 import * as MD from 'mangadex-full-api';
-import getChapterNumber from '../utils/get-chapter-num';
-import { Interaction } from 'discord.js';
+import getChapterNumber from '../../utils/get-chapter-num';
 
 const scraper = new Manganato();
 
-export const getSingle = async (interaction: Interaction, title: string) => {    
+export const getSingle = async (title: string) => {    
     try {
         const res = (await scraper.search(title))[0]; // returns object with title, url, and image
         

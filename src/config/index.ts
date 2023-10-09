@@ -1,9 +1,11 @@
 import { GatewayIntentBits, Client, Partials} from 'discord.js';
 import { SlashCommandStringOption, SlashCommandBuilder } from '@discordjs/builders';
+import discordModals, {showModal, TextInputComponent} from 'discord-modals';
 import { cmdArr } from './commands';
 import getError from '../utils/get-error';
-import { getSingle } from '../scraper';
-import { embedBuilder } from '../utils/discord-res/embed';
+import { getSingle } from '../scraper/get-single';
+import { embedBuilder } from '../utils/discord/embed';
+import { modalBuilder } from '../utils/discord/modal';
 
 const client = new Client({
     intents: [
@@ -25,6 +27,8 @@ export const clientStart = async () => {
         throw new Error(errMsg);
     }
 };
+discordModals(client);
+
 
 type cmdType = {
     name: string,
@@ -78,9 +82,10 @@ type resType = {
     other?: boolean | undefined,
 }
 
+
 client.on('interactionCreate', async (interaction) => {
     try {
-        if (!interaction.isCommand()) return;
+        if (!interaction.isCommand() || !interaction.isModalSubmit) return;
     
         const { commandName, options } = interaction;
         
@@ -95,18 +100,25 @@ client.on('interactionCreate', async (interaction) => {
             case 'updated':
                 const title = options.data[0].value?.toString().trim();
                 await interaction.reply({embeds: [embedBuilder('Checking...', `Checking for updates on ${title}`)]});
-                const res: resType = (await getSingle(interaction, title!)) || { title: 'Error', description: 'Something went wrong', err: true };
+                const res: resType = (await getSingle(title!)) || { title: 'Error', description: 'Something went wrong', err: true };
                 
                 await interaction.editReply({embeds: [embedBuilder(res.title, res.description, res.image, res.success, res.err, res.warn)]});
             break;
     
             case 'check-follow':
+                const modal = await modalBuilder(interaction);
+
+                showModal(modal, {
+                    client: interaction.client,
+                    interaction: interaction,
+                })
             break;
 
             case 'check-list':
             break;
     
             default:
+                await interaction.reply({embeds: [embedBuilder('Error', 'Something went wrong', undefined, undefined, true)]});
             break;
         }
     } catch (err) {
@@ -114,5 +126,22 @@ client.on('interactionCreate', async (interaction) => {
         throw new Error(errMsg);
     }
 });
+
+client.on('modalSubmit', async (i) => {
+    try {        
+        switch (i.customId) {
+            case 'login':
+                const username = i.components[0].components[0].value;
+                const password = i.components[1].components[0].value;
+
+                i.reply({embeds: [embedBuilder('Checking...', `Checking for updates on ${username}`)]});
+        }
+    } catch (err) {
+        const errMsg = getError(err);
+        throw new Error(errMsg);
+    }
+});
+
+
 
 export default client;
