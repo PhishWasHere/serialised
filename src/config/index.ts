@@ -3,6 +3,7 @@ import { SlashCommandStringOption, SlashCommandBuilder } from '@discordjs/builde
 import discordModals, {showModal, TextInputComponent} from 'discord-modals';
 import { cmdArr } from './commands';
 import getError from '../utils/get-error';
+import msgSplit from '../utils/msg-splitte';
 import { getSingle } from '../scraper/get-single';
 import { embedBuilder } from '../utils/discord/embed';
 import { modalBuilder } from '../utils/discord/modal';
@@ -129,16 +130,86 @@ client.on('interactionCreate', async (interaction) => {
 });
 
 client.on('modalSubmit', async (i) => {
-    try {        
-        switch (i.customId) {
-            case 'login':
-                const username = i.components[0].components[0].value;
-                const password = i.components[1].components[0].value;
-                i.reply({embeds: [embedBuilder('Checking...', `Checking for updates on ${username}`)]});
-                await getFollow(username, password);
-            break;
+    try {
+        const timeout = 25000; //25 seconds
+        
+        const timeoutPromise = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                reject(i.editReply({embeds: [embedBuilder('Error', 'Request timed out. (you may have too many follows for the server to keep up)', undefined, undefined, true)]}));
+            }, timeout);
+        });
 
-        }
+        await Promise.race([
+            (async () => {
+                switch (i.customId) {
+                    case 'login':
+                        const username = i.components[0].components[0].value.trim();
+                        const password = i.components[1].components[0].value.trim();
+
+                        await i.reply({embeds: [embedBuilder('Checking...', `Checking follow list for ${username}. This may take a minute.`)]});
+
+                        const {updatedArr, notUpdatedArr, errArr} = await getFollow(username, password);
+
+                        const count = updatedArr.length + notUpdatedArr.length + errArr.length;
+
+                        await i.editReply({embeds: [embedBuilder('Done!', `Checked ${count} manga's for updates.` )]})
+                        
+                        // updated manga section
+                        const updatedTitles = updatedArr.map((manga) => `*${manga.title} - Chapter ${manga.latestChapter}* **|**`);
+                        const updatedMessage = `${updatedTitles.join(' ')}`;
+                        
+                        if (updatedMessage.length <= 1800) {
+                            await i.followUp({embeds: [embedBuilder('The following manga are updated on MangaDex: ', updatedMessage, null, true)]});
+
+                        } else {
+                            const chunks = msgSplit(updatedMessage, 1800);
+
+                            for (const chunk of chunks) {
+                                await i.followUp({embeds: [embedBuilder('The following manga are updated on MangaDex: ', chunk, null, true)]});
+                            }
+                        }
+
+                        // not updated manga section
+                        if (notUpdatedArr.length > 0 ) {
+                            const notUpdatedTitles = notUpdatedArr.map((manga) => `*${manga.title} - Chapter ${manga.latestChapter}* **|**`);
+                            const notUpdatedMessage = `**The following manga are not updated on MangaDex**: ${notUpdatedTitles.join(' ')}`;
+            
+                            if (notUpdatedMessage.length <= 1800) {
+                                await i.followUp({embeds: [embedBuilder('Not Updated', notUpdatedMessage, null, false, false, true)]});
+            
+                            } else {
+                                const chunks = msgSplit(notUpdatedMessage, 1800);
+            
+                                for (const chunk of chunks) {
+                                    await i.followUp({embeds: [embedBuilder('Not Updated', chunk, null, false, false, true)]});
+                                }
+                            }
+                        }
+                        
+                        // error manga section
+                        if (errArr.length > 0 ) {
+                            const errTitles = errArr.map((manga) => `*${manga}* **|**`);
+                            const errMessage = `${errTitles.join(' ')}`;
+            
+                            if (errMessage.length <= 1800) {
+                                await i.followUp({embeds: [embedBuilder('The following manga had an error: ', errMessage, null, false, true)]});
+            
+                            } else {
+                                const chunks = msgSplit(errMessage, 1800);
+            
+                                for (const chunk of chunks) {
+                                    await i.followUp({embeds: [embedBuilder('The following manga had an error: ', chunk, null, false, true)]});
+                                }
+                            }
+                        }
+                    
+                    break;
+
+                }
+            })(),
+            timeoutPromise
+        ]);
+
     } catch (err) {
         const errMsg = getError(err);
         throw new Error(errMsg);
