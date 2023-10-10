@@ -3,11 +3,10 @@ import { SlashCommandStringOption, SlashCommandBuilder } from '@discordjs/builde
 import discordModals, {showModal, TextInputComponent} from 'discord-modals';
 import { cmdArr } from './commands';
 import getError from '../utils/get-error';
-import msgSplit from '../utils/msg-splitte';
 import { getSingle } from '../scraper/get-single';
-import { embedBuilder } from '../utils/discord/embed';
+import embedBuilder from '../utils/discord/embed';
 import { modalBuilder } from '../utils/discord/modal';
-import { getFollow } from '../scraper/check-follow';
+import { getFollowList } from '../scraper/check-follow';
 
 const client = new Client({
     intents: [
@@ -148,61 +147,7 @@ client.on('modalSubmit', async (i) => {
 
                         await i.reply({embeds: [embedBuilder('Checking...', `Checking follow list for ${username}. This may take a minute.`)]});
 
-                        const {updatedArr, notUpdatedArr, errArr} = await getFollow(username, password);
-
-                        const count = updatedArr.length + notUpdatedArr.length + errArr.length;
-
-                        await i.editReply({embeds: [embedBuilder('Done!', `Checked ${count} manga's for updates.` )]})
-                        
-                        // updated manga section
-                        const updatedTitles = updatedArr.map((manga) => `*${manga.title} - Chapter ${manga.latestChapter}* **|**`);
-                        const updatedMessage = `${updatedTitles.join(' ')}`;
-                        
-                        if (updatedMessage.length <= 1800) {
-                            await i.followUp({embeds: [embedBuilder('The following manga are updated on MangaDex: ', updatedMessage, null, true)]});
-
-                        } else {
-                            const chunks = msgSplit(updatedMessage, 1800);
-
-                            for (const chunk of chunks) {
-                                await i.followUp({embeds: [embedBuilder('The following manga are updated on MangaDex: ', chunk, null, true)]});
-                            }
-                        }
-
-                        // not updated manga section
-                        if (notUpdatedArr.length > 0 ) {
-                            const notUpdatedTitles = notUpdatedArr.map((manga) => `*${manga.title} - Chapter ${manga.latestChapter}* **|**`);
-                            const notUpdatedMessage = `**The following manga are not updated on MangaDex**: ${notUpdatedTitles.join(' ')}`;
-            
-                            if (notUpdatedMessage.length <= 1800) {
-                                await i.followUp({embeds: [embedBuilder('Not Updated', notUpdatedMessage, null, false, false, true)]});
-            
-                            } else {
-                                const chunks = msgSplit(notUpdatedMessage, 1800);
-            
-                                for (const chunk of chunks) {
-                                    await i.followUp({embeds: [embedBuilder('Not Updated', chunk, null, false, false, true)]});
-                                }
-                            }
-                        }
-                        
-                        // error manga section
-                        if (errArr.length > 0 ) {
-                            const errTitles = errArr.map((manga) => `*${manga}* **|**`);
-                            const errMessage = `${errTitles.join(' ')}`;
-            
-                            if (errMessage.length <= 1800) {
-                                await i.followUp({embeds: [embedBuilder('The following manga had an error: ', errMessage, null, false, true)]});
-            
-                            } else {
-                                const chunks = msgSplit(errMessage, 1800);
-            
-                                for (const chunk of chunks) {
-                                    await i.followUp({embeds: [embedBuilder('The following manga had an error: ', chunk, null, false, true)]});
-                                }
-                            }
-                        }
-                    
+                        await getFollowList(username, password, i);                    
                     break;
 
                 }
@@ -215,7 +160,5 @@ client.on('modalSubmit', async (i) => {
         throw new Error(errMsg);
     }
 });
-
-
 
 export default client;

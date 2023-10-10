@@ -1,7 +1,7 @@
 import { Interaction, EmbedBuilder } from 'discord.js';
 
 // embed builder function
-export const embedBuilder = ( title: string, desc: string, image?: string | null, success?: boolean, err?: boolean, warn?: boolean, other?: boolean) => {
+const embedBuilder = ( title: string, desc: string, image?: string | null, success?: boolean, err?: boolean, warn?: boolean, other?: boolean) => {
     const embed = new EmbedBuilder();
 
     if (!image || image === null) {
@@ -36,4 +36,4 @@ export const embedBuilder = ( title: string, desc: string, image?: string | null
     return embed;
 }
 
- 
+export default embedBuilder;
