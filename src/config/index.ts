@@ -6,6 +6,7 @@ import getError from '../utils/get-error';
 import { getSingle } from '../scraper/get-single';
 import { embedBuilder } from '../utils/discord/embed';
 import { modalBuilder } from '../utils/discord/modal';
+import { getFollow } from '../scraper/check-follow';
 
 const client = new Client({
     intents: [
@@ -133,8 +134,10 @@ client.on('modalSubmit', async (i) => {
             case 'login':
                 const username = i.components[0].components[0].value;
                 const password = i.components[1].components[0].value;
-
                 i.reply({embeds: [embedBuilder('Checking...', `Checking for updates on ${username}`)]});
+                await getFollow(username, password);
+            break;
+
         }
     } catch (err) {
         const errMsg = getError(err);

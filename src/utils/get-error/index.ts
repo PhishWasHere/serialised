@@ -7,6 +7,8 @@ const getError = (err: unknown): string => { // func to return err as string
         msg = String(err.message);
     } else if (typeof err === 'string') {
         msg = err;
+    } else if (err instanceof TypeError) {
+        msg = `TypeError: ${err.message}`;
     } msg = 'Unknown error';
 
     console.error(`\x1b[31m> Server error: \x1b[0m`, msg);
