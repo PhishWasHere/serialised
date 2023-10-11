@@ -58,15 +58,18 @@ client.once('ready', async () => {
     console.log(`\x1b[35m> Ready!\x1b[0m Logged in as ${client.user?.tag}`);
     try {
         const commands = await client.application?.commands.fetch();//gets commands, then deletes them on start
-        // commands?.forEach(async (cmd) => {
-        //     console.log(`\x1b[31m> Deleting\x1b[0m: ${cmd.name}`);
-        //     await client.application?.commands.delete(cmd);
-        // });
+        commands?.forEach(async (cmd) => {
+            console.log(`\x1b[31m> Deleting\x1b[0m: ${cmd.name}`);
+            await client.application?.commands.delete(cmd);
+        });
 
         commandBuilder(cmdArr).forEach(async (cmd) => { //creates commands
             console.log(`\x1b[94m> Creating\x1b[0m: ${cmd.name}`);
             await client.application?.commands.create(cmd);
         });
+
+        console.log(`\x1b[35m> Ready!\x1b[0m Commands created`)
+
     } catch (err) {
         const errMsg = getError(err);
         throw new Error(errMsg);
@@ -134,7 +137,7 @@ client.on('modalSubmit', async (i) => {
 
         let isTimedOut = true;
     
-        const timeoutPromise = new Promise((resolve, reject) => {
+        const timeoutPromise = new Promise((resolve, reject) => { // timeout function, if discord command takes too long to complete, returns timeout err
             setTimeout(() => {
                 if (isTimedOut) {
                     reject(i.editReply({embeds: [embedBuilder({title: 'Error', desc: 'Request timed out. (you may have too many follows for the server to keep up)', err: true })]}));

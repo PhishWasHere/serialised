@@ -62,8 +62,13 @@ This bot uses a web scraper to fetch the latest chapter of a given manga. It sou
 
 ## Known Issues
 
-The MangaDex API sometimes doesn't include the last chapter in its JSON response. I am currently exploring ways to handle this situation without relying on another web scraper.
-</br>Occasionally, the /check-follow command may trigger the timeout function without executing the intended function. While this is very rare, if it occurs, simply restart the bot.
+<details>
+<summary>Issues</summary>
+<ul> 
+    <li>The MangaDex API sometimes doesn't include the last chapter in its JSON response. I am currently exploring ways to handle this situation without relying on another web scraper.</li>
+    <li>Occasionally, the /check-follow command may trigger the timeout function without executing the intended function. While this is very rare, if it occurs, simply restart the bot.</li>
+    <li>The build command returns build errors. The issue is comming from discord-modals. Working on a fix</li>
+</details>
 
 _______
 
