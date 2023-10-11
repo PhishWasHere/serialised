@@ -14,5 +14,5 @@ app.listen(port, () => {
     clientStart()
 })
 
-import { getSingle } from './scraper/get-single'
+// import { getSingle } from './interaction/scraper/get-single'
 // getSingle('Vampeerz');

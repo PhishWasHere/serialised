@@ -5,7 +5,7 @@ import getChapterNumber from '../../utils/get-chapter-num';
 
 const scraper = new Manganato();
 
-export const getSingle = async (title: string) => {    
+export const getSingleCmd = async (title: string) => {    
     try {
         const res = (await scraper.search(title))[0]; // returns object with title, url, and image
         

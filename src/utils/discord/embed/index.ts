@@ -1,9 +1,19 @@
-import { Interaction, EmbedBuilder } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
+
+type embedBuilderType = {
+    title: string;
+    desc: string;
+    image?: string | null;
+    success?: boolean;
+    err?: boolean;
+    warn?: boolean;
+    other?: boolean;
+}
 
 // embed builder function
-const embedBuilder = ( title: string, desc: string, image?: string | null, success?: boolean, err?: boolean, warn?: boolean, other?: boolean) => {
+const embedBuilder = ({ title, desc, image, success, err, warn, other }: embedBuilderType) => {
     const embed = new EmbedBuilder();
-
+     
     if (!image || image === null) {
         image = 'https://i.imgur.com/2t1vVZu.png';
     }
@@ -25,7 +35,7 @@ const embedBuilder = ( title: string, desc: string, image?: string | null, succe
     } else if (other){
         embed.setTitle(title);
         embed.setDescription(desc);
-        embed.setColor('#FFA500');
+        embed.setColor('#800080');
         embed.setImage(image);
     } else {
         embed.setTitle(title);

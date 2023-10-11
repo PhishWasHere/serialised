@@ -1,12 +1,12 @@
 import { GatewayIntentBits, Client, Partials} from 'discord.js';
 import { SlashCommandStringOption, SlashCommandBuilder } from '@discordjs/builders';
-import discordModals, {showModal, TextInputComponent} from 'discord-modals';
+import discordModals, {showModal } from 'discord-modals';
 import { cmdArr } from './commands';
 import getError from '../utils/get-error';
-import { getSingle } from '../scraper/get-single';
 import embedBuilder from '../utils/discord/embed';
-import { modalBuilder } from '../utils/discord/modal';
-import { getFollowList } from '../scraper/check-follow';
+import modalBuilder from '../utils/discord/modal';
+import { getFollowCmd, getSingleCmd, helpCmd } from '../interactions';
+
 
 const client = new Client({
     intents: [
@@ -83,7 +83,6 @@ type resType = {
     other?: boolean | undefined,
 }
 
-
 client.on('interactionCreate', async (interaction) => {
     try {
         if (!interaction.isCommand() || !interaction.isModalSubmit) return;
@@ -92,18 +91,19 @@ client.on('interactionCreate', async (interaction) => {
         
         switch (commandName) {
             case 'ping':
-                await interaction.reply({embeds: [embedBuilder('Pong!', 'Pong!')]})
+                await interaction.reply({embeds: [embedBuilder({title: 'Pong!', desc: 'Pong!'})]})
             break;
     
             case 'help':
+                await helpCmd(interaction);
             break;
     
             case 'updated':
                 const title = options.data[0].value?.toString().trim();
-                await interaction.reply({embeds: [embedBuilder('Checking...', `Checking for updates on ${title}`)]});
-                const res: resType = (await getSingle(title!)) || { title: 'Error', description: 'Something went wrong', err: true };
+                await interaction.reply({embeds: [embedBuilder({ title: 'Checking...', desc: `Checking for updates on ${title}`})]});
+                const res: resType = (await getSingleCmd(title!)) || { title: 'Error', description: 'Something went wrong', err: true };
                 
-                await interaction.editReply({embeds: [embedBuilder(res.title, res.description, res.image, res.success, res.err, res.warn)]});
+                await interaction.editReply({embeds: [embedBuilder({ title: res.title, desc: res.description, image: res.image, success: res.success, err: res.err, warn: res.warn })]});
             break;
     
             case 'check-follow':
@@ -119,7 +119,7 @@ client.on('interactionCreate', async (interaction) => {
             break;
     
             default:
-                await interaction.reply({embeds: [embedBuilder('Error', 'Something went wrong', undefined, undefined, true)]});
+                await interaction.reply({embeds: [embedBuilder({title: 'Error', desc: 'Something went wrong', err: true })]});
             break;
         }
     } catch (err) {
@@ -137,7 +137,7 @@ client.on('modalSubmit', async (i) => {
         const timeoutPromise = new Promise((resolve, reject) => {
             setTimeout(() => {
                 if (isTimedOut) {
-                    reject(i.editReply({embeds: [embedBuilder('Error', 'Request timed out. (you may have too many follows for the server to keep up)', undefined, undefined, true)]}));
+                    reject(i.editReply({embeds: [embedBuilder({title: 'Error', desc: 'Request timed out. (you may have too many follows for the server to keep up)', err: true })]}));
                 }
             }, timeout);
         });
@@ -150,9 +150,9 @@ client.on('modalSubmit', async (i) => {
                         const username = i.components[0].components[0].value.trim();
                         const password = i.components[1].components[0].value.trim();             
                         
-                        await i.reply({embeds: [embedBuilder('Checking...', `Checking follow list for ${username}. This may take a minute.`)]});
+                        await i.reply({embeds: [embedBuilder({ title: 'Checking...', desc: `Checking follow list for ${username}. This may take a minute.` })]});
                         
-                        await getFollowList(username, password, i);        
+                        await getFollowCmd(username, password, i);        
                         
                         isTimedOut = false; // marks function as completed, doesnt run timeout func
                     break;

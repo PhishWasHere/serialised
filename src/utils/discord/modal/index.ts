@@ -2,7 +2,7 @@ import { Modal, TextInputComponent } from 'discord-modals';
 import { Interaction } from 'discord.js';
 import getError from '../../get-error';
 
-export const modalBuilder = (interaction: Interaction) => {
+const modalBuilder = (interaction: Interaction) => {
     try {
         const modal = new Modal()
         .setCustomId('login')
@@ -21,10 +21,10 @@ export const modalBuilder = (interaction: Interaction) => {
           new TextInputComponent()
             .setCustomId('password')
             .setLabel('Password')
-            .setStyle('SHORT')
+            .setStyle('LONG')
             .setMinLength(1)
-            .setMaxLength(10)
-            .setPlaceholder('I recommend using a temp password')
+            .setMaxLength(30)
+            .setPlaceholder('password (i recommend using a temp password)')
             .setRequired(true)
         )
         return modal;
@@ -34,3 +34,4 @@ export const modalBuilder = (interaction: Interaction) => {
         throw new Error(errMsg);
     }
 }
+export default modalBuilder;

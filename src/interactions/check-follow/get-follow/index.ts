@@ -2,7 +2,7 @@ import getError from '../../../utils/get-error';
 import * as MD from 'mangadex-full-api';
 import { compareChapter } from '../compare-follow';
 
-export const getFollow = async (username: string, password: string) => {
+export const getFollow= async (username: string, password: string) => {
     try{
         await MD.login(username, password);
 
