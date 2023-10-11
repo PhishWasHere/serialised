@@ -20,7 +20,7 @@ _______
 
 ## Getting Started
 Currently you will need to install this bot and run it locally.
-</br>In once some bugs are ironed out, you will be able to invite the bot.
+</br>Once some bugs are ironed out, you will be able to invite the bot.
 
 ## Installation
 
