@@ -130,24 +130,31 @@ client.on('interactionCreate', async (interaction) => {
 
 client.on('modalSubmit', async (i) => {
     try {
-        const timeout = 25000; //25 seconds
-        
+        const timeout = 25000; // 25 seconds
+
+        let isTimedOut = true;
+    
         const timeoutPromise = new Promise((resolve, reject) => {
             setTimeout(() => {
-                reject(i.editReply({embeds: [embedBuilder('Error', 'Request timed out. (you may have too many follows for the server to keep up)', undefined, undefined, true)]}));
+                if (isTimedOut) {
+                    reject(i.editReply({embeds: [embedBuilder('Error', 'Request timed out. (you may have too many follows for the server to keep up)', undefined, undefined, true)]}));
+                }
             }, timeout);
         });
 
-        await Promise.race([
+        await Promise.race([ // runs both functions, if discord command takes too long to complete, returns timeout err
             (async () => {
                 switch (i.customId) {
                     case 'login':
+                        
                         const username = i.components[0].components[0].value.trim();
-                        const password = i.components[1].components[0].value.trim();
-
+                        const password = i.components[1].components[0].value.trim();             
+                        
                         await i.reply({embeds: [embedBuilder('Checking...', `Checking follow list for ${username}. This may take a minute.`)]});
-
-                        await getFollowList(username, password, i);                    
+                        
+                        await getFollowList(username, password, i);        
+                        
+                        isTimedOut = false; // marks function as completed, doesnt run timeout func
                     break;
 
                 }
