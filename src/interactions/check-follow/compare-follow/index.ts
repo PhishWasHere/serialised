@@ -6,7 +6,12 @@ const scraper = new Manganato();
 
 type mangaArrType = {
     title: string,
-    latestChapter: string | null,
+    latestChapter: number | null,
+}[];
+
+type returnArrType = {
+    title: string,
+    latestChapter: number | null,
 }[];
 
 type ManganatoManga = {
@@ -18,21 +23,21 @@ type ManganatoManga = {
     coverImage: string;
 }
  
-export const compareChapter = async (mangaArr: mangaArrType) => {
+export const compareChapter = async (mangaArr: mangaArrType, resErrArr: string[]) => {
     try {
-    
-        let errArr:string[] = []; // manga that couldnt be found, or contained some err (eg: no latest chapter)
-        let returnArr:mangaArrType = []; // manga that could be found
-
+        let errArr = resErrArr; // manga that couldnt be found, or contained some err (eg: no latest chapter)
+        let returnArr:returnArrType = []; // manga that could be found
+        
         let updatedArr: mangaArrType = []; // return object after comparison 
         let notUpdatedArr: mangaArrType = []; // return object after comparison
+        let notFoundArr: string[] = []; // manga that couldnt be found
 
         try { // get latest chapter from manganato
             await Promise.all(mangaArr.map(async (manga) => {
                 const res: ManganatoManga[] = await scraper.search(manga.title);
     
                 if (!res || res.length === 0) {
-                    return errArr.push(manga.title);
+                    return notFoundArr.push(manga.title);
                 }
             
                 const scraperManga = (await scraper.getMangaMeta(res[0].url));
@@ -57,7 +62,7 @@ export const compareChapter = async (mangaArr: mangaArrType) => {
         try { // compare latest chapter from manganato with mangadex
             await Promise.all(returnArr.map(async (manga) => { 
                 switch (true) {
-                    case !manga.latestChapter || manga.latestChapter === '' || manga.latestChapter === null:
+                    case !manga.latestChapter || Number.isNaN(manga.latestChapter)|| manga.latestChapter === null:
                         errArr.push(manga.title);
                         return
                     break;
@@ -83,7 +88,7 @@ export const compareChapter = async (mangaArr: mangaArrType) => {
             throw new Error(errMsg);
         }
         
-        return {updatedArr, notUpdatedArr, errArr};
+        return {updatedArr, notUpdatedArr, errArr, notFoundArr};
 
     } catch (err) {
         const errMsg = getError(err);

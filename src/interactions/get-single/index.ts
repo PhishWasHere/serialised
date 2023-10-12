@@ -30,14 +30,14 @@ export const getSingleCmd = async (title: string) => {
             availableTranslatedLanguage: ['en'],
         })).id;
         
-        const mdNum = (await MD.Manga.getFeed(mangaId, {translatedLanguage: ['en'], order: {chapter: 'desc'}}))[0].chapter; // returns the latest chapter from MangaDex
+        const mdNum = parseFloat((await MD.Manga.getFeed(mangaId, {translatedLanguage: ['en'], order: {chapter: 'desc'}}))[0].chapter); // returns the latest chapter from MangaDex
 
         switch (true) {
             case !mangaId:
                 return {title: `${mangaTitle} not found`, description: 'The manga was not found on MangaDex. Please check for typos and try again', image: mangaImage, err: true};
             break;
     
-            case mdNum === '':
+            case !mdNum:
                 return {title: `Chapters for ${mangaTitle} not found`, description: `The latest chapter is chapter: ${scraperNum}. Cannot get the latest chapter from MangaDex.`, image: mangaImage, warn : true};
             break;
 

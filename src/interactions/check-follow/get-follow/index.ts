@@ -1,21 +1,36 @@
 import getError from '../../../utils/get-error';
 import * as MD from 'mangadex-full-api';
 import { compareChapter } from '../compare-follow';
+import batchManga from './batch-manga';
+import processBatch from './process-batch';
+
+type mangaArrType = {
+    title: string,
+    latestChapter: number,
+}[];
+
+import fsCheck from '../../../utils/fs-object-check';
 
 export const getFollow= async (username: string, password: string) => {
     try{
-        await MD.login(username, password);
+        try{
+            await MD.login(username, password);
+        } catch (err) {
+            const errMsg = getError(err);
+            throw new Error(errMsg);
+        }
 
-        const mangaArr = (await MD.Manga.getFollowedManga((Infinity))).map((manga) => ({
+        const dataArr = (await MD.Manga.getFollowedManga((Infinity))).map((manga) => ({
             title: manga.title,
-            latestChapter: manga.lastChapter
+            id: manga.id,
             })
         );
 
-        let mangaIdArr = (await MD.Manga.getFollowedManga((Infinity))).map((manga) => manga.id);
-        console.log(mangaIdArr);
+        const batches = await batchManga(dataArr);
 
-        const comparedArr = await compareChapter(mangaArr);
+        const { mangaArr, resErrArr } = await processBatch(batches);
+
+        const comparedArr = await compareChapter(mangaArr, resErrArr);
         
         return comparedArr;
     } catch (err) {

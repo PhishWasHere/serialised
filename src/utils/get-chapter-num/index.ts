@@ -9,7 +9,7 @@ const getChapterNumber = (async (chapter: string) => {
             return null
         }
 
-        const chapterNumber = match[1];
+        const chapterNumber = parseFloat(match[1]);
         return chapterNumber;
     } catch (err) {
         const errMsg = getError(err);

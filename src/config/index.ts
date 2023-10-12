@@ -137,16 +137,16 @@ client.on('modalSubmit', async (i) => {
 
         let isTimedOut = true;
     
-        const timeoutPromise = new Promise((resolve, reject) => { // timeout function, if discord command takes too long to complete, returns timeout err
-            setTimeout(() => {
-                if (isTimedOut) {
-                    reject(i.editReply({embeds: [embedBuilder({title: 'Error', desc: 'Request timed out. (you may have too many follows for the server to keep up)', err: true })]}));
-                }
-            }, timeout);
-        });
+        // const timeoutPromise = new Promise((resolve, reject) => { // timeout function, if discord command takes too long to complete, returns timeout err
+        //     setTimeout(() => {
+        //         if (isTimedOut) {
+        //             reject(i.editReply({embeds: [embedBuilder({title: 'Error', desc: 'Request timed out. (you may have too many follows for the server to keep up)', err: true })]}));
+        //         }
+        //     }, timeout);
+        // });
 
-        await Promise.race([ // runs both functions, if discord command takes too long to complete, returns timeout err
-            (async () => {
+        // await Promise.race([ // runs both functions, if discord command takes too long to complete, returns timeout err
+        //     (async () => {
                 switch (i.customId) {
                     case 'login':
                         
@@ -161,9 +161,9 @@ client.on('modalSubmit', async (i) => {
                     break;
 
                 }
-            })(),
-            timeoutPromise
-        ]);
+        //     })(),
+        //     timeoutPromise
+        // ]);
 
     } catch (err) {
         const errMsg = getError(err);
