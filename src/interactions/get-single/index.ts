@@ -24,31 +24,33 @@ export const getSingleCmd = async (title: string) => {
             return {title: `Chapters for ${title} not found`, description: 'Cannot get the latest chapter from Manganato.', warn : true};
         }
          
-        const mdNum = (await MD.Manga.getByQuery({ // returns the latest chapter of the manga from MangaDex. MD API kinda shit, might try to scrape site instead once MVP done
+        const mangaId = (await MD.Manga.getByQuery({ // returns manga id from MangaDex
             title: title,
             limit: 1,
             availableTranslatedLanguage: ['en'],
-        }));        
+        })).id;
         
+        const mdNum = (await MD.Manga.getFeed(mangaId, {translatedLanguage: ['en'], order: {chapter: 'desc'}}))[0].chapter; // returns the latest chapter from MangaDex
+
         switch (true) {
-            case !mdNum.id:
+            case !mangaId:
                 return {title: `${mangaTitle} not found`, description: 'The manga was not found on MangaDex. Please check for typos and try again', image: mangaImage, err: true};
             break;
     
-            case mdNum.lastChapter === '':
+            case mdNum === '':
                 return {title: `Chapters for ${mangaTitle} not found`, description: `The latest chapter is chapter: ${scraperNum}. Cannot get the latest chapter from MangaDex.`, image: mangaImage, warn : true};
             break;
 
-            case mdNum.lastChapter == scraperNum:
-                return {title: `${mangaTitle} is updated`, description: `This manga is being updated, the latest chapter is ${mdNum.lastChapter}`, image: mangaImage, success: true};
+            case mdNum == scraperNum:
+                return {title: `${mangaTitle} is updated`, description: `This manga is being updated, the latest chapter is ${mdNum}`, image: mangaImage, success: true};
             break;
 
-            case mdNum.lastChapter > scraperNum:
-                return {title: `${mangaTitle} is updated`, description: `This manga is being updated, the latest chapter is ${mdNum.lastChapter}`, image: mangaImage, success: true};
+            case mdNum > scraperNum:
+                return {title: `${mangaTitle} is updated`, description: `This manga is being updated, the latest chapter is ${mdNum}`, image: mangaImage, success: true};
             break;
 
-            case mdNum.lastChapter < scraperNum:
-                return {title: `${mangaTitle} is not updated`, description: `This manga is not being updated, the latest chapter is chapter: ${scraperNum}`, image: mangaImage, other: true};
+            case mdNum < scraperNum:
+                return {title: `${mangaTitle} is not updated`, description: `This manga is not being updated, the latest chapter is chapter: ${scraperNum}`, image: mangaImage, warn: true};
             break;
 
             default:

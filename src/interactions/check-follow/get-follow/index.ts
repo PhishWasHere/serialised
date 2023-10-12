@@ -11,6 +11,10 @@ export const getFollow= async (username: string, password: string) => {
             latestChapter: manga.lastChapter
             })
         );
+
+        let mangaIdArr = (await MD.Manga.getFollowedManga((Infinity))).map((manga) => manga.id);
+        console.log(mangaIdArr);
+
         const comparedArr = await compareChapter(mangaArr);
         
         return comparedArr;

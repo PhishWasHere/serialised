@@ -1,0 +1,181 @@
+{
+  "id": "acc3ff9c-3494-4bdc-b474-96b24d0c160c",
+  "localizedTitle": {
+    "en": "Ochite Oborete",
+    "availableLocales": [
+      "en"
+    ]
+  },
+  "localizedAltTitles": [
+    {
+      "ja": "落ちて溺れて",
+      "availableLocales": [
+        "ja"
+      ]
+    },
+    {
+      "ja-ro": "Ochite, Oborete",
+      "availableLocales": [
+        "ja-ro"
+      ]
+    },
+    {
+      "en": "Falling Drowning",
+      "availableLocales": [
+        "en"
+      ]
+    },
+    {
+      "en": "Fall and Drown",
+      "availableLocales": [
+        "en"
+      ]
+    },
+    {
+      "ar": "الوقوع والغرق",
+      "availableLocales": [
+        "ar"
+      ]
+    }
+  ],
+  "localizedDescription": {
+    "en": "It's the start of their 2nd-year of high school. But having just caught the flu, Honatsu Tenma has missed the first two weeks—along with the new loner transfer student, Shun Tachibana. Upon meeting, he tells her, \"the feeling of being in love is like falling\". What's that supposed to mean?! Luckily her close childhood friend Touma Yamaji, is there to keep her steady. Or is he? A story about friendship, love, and truth.",
+    "availableLocales": [
+      "en"
+    ]
+  },
+  "isLocked": false,
+  "links": {
+    "al": "https://anilist.co/manga/129914",
+    "ap": "https://www.anime-planet.com/manga/ochite-oborete",
+    "bw": "https://bookwalker.jp/series/303360/",
+    "mu": "https://www.mangaupdates.com/series.html?id=176609",
+    "mal": "https://myanimelist.net/manga/137885",
+    "amz": "https://www.amazon.co.jp/dp/B09KZYVXKN",
+    "ebj": "https://ebookjapan.yahoo.co.jp/books/639234/",
+    "raw": "https://go-dessert.jp/kc/ochiteoborete/",
+    "engtl": "https://kodansha.us/series/falling-drowning/",
+    "availableLinks": [
+      "al",
+      "ap",
+      "bw",
+      "mu",
+      "amz",
+      "ebj",
+      "mal",
+      "raw",
+      "engtl"
+    ]
+  },
+  "originalLanguage": "ja",
+  "lastVolume": "3",
+  "lastChapter": "12",
+  "publicationDemographic": "shoujo",
+  "status": "completed",
+  "year": 2021,
+  "contentRating": "safe",
+  "createdAt": "2021-01-18T09:57:37.000Z",
+  "updatedAt": "2022-04-05T14:12:24.000Z",
+  "authors": [
+    {
+      "id": "5a06f9ee-baf8-4e4f-bb67-82b875bf8b4f",
+      "type": "author",
+      "cached": false
+    }
+  ],
+  "artists": [
+    {
+      "id": "5a06f9ee-baf8-4e4f-bb67-82b875bf8b4f",
+      "type": "artist",
+      "cached": false
+    }
+  ],
+  "mainCover": {
+    "id": "3e58d5c1-0f0d-43f2-8eca-795755eb4a3d",
+    "type": "cover_art",
+    "cached": false
+  },
+  "tags": [
+    {
+      "id": "423e2eae-a7a2-4a8b-ac03-a8351462d71d",
+      "localizedName": {
+        "en": "Romance",
+        "availableLocales": [
+          "en"
+        ]
+      },
+      "localizedDescription": {
+        "availableLocales": []
+      },
+      "group": "genre"
+    },
+    {
+      "id": "b9af3a63-f058-46de-a9a0-e0c13906197a",
+      "localizedName": {
+        "en": "Drama",
+        "availableLocales": [
+          "en"
+        ]
+      },
+      "localizedDescription": {
+        "availableLocales": []
+      },
+      "group": "genre"
+    },
+    {
+      "id": "caaa44eb-cd40-4177-b930-79d3ef2afe87",
+      "localizedName": {
+        "en": "School Life",
+        "availableLocales": [
+          "en"
+        ]
+      },
+      "localizedDescription": {
+        "availableLocales": []
+      },
+      "group": "theme"
+    },
+    {
+      "id": "e5301a23-ebd9-49dd-a0cb-2add944c7fe9",
+      "localizedName": {
+        "en": "Slice of Life",
+        "availableLocales": [
+          "en"
+        ]
+      },
+      "localizedDescription": {
+        "availableLocales": []
+      },
+      "group": "genre"
+    }
+  ],
+  "relatedManga": {
+    "monochrome": [],
+    "main_story": [],
+    "adapted_from": [],
+    "based_on": [],
+    "prequel": [],
+    "side_story": [],
+    "doujinshi": [],
+    "same_franchise": [],
+    "shared_universe": [],
+    "sequel": [],
+    "spin_off": [],
+    "alternate_story": [],
+    "preserialization": [],
+    "colored": [],
+    "serialization": []
+  },
+  "version": 13,
+  "chapterNumbersResetOnNewVolume": false,
+  "availableTranslatedLanguages": [
+    "en",
+    "es-la"
+  ],
+  "state": "published",
+  "latestUploadedChapter": {
+    "id": "eadc095d-e672-4136-98d0-41a98161ad0e",
+    "type": "chapter",
+    "cached": false
+  }
+}

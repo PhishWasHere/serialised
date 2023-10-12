@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import getError from '../get-error';
 
-export const fsCheck = async (index: object) => {
+const fsCheck = async (index: object) => {
     try {
         const filePath = path.join(__dirname, 'followArr.json');
         const content = JSON.stringify(index, null, 2);
@@ -18,4 +18,6 @@ export const fsCheck = async (index: object) => {
         throw new Error(errMsg);
     }
 }
+
+export default fsCheck;
 
