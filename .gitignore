@@ -17,6 +17,7 @@ todo
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+**/fs-object-check/
 
 # local env files
 .env
