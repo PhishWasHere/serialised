@@ -9,7 +9,8 @@ type batchType = {
 
 type mangaArrType = {
     title: string,
-    latestChapter: number,
+    mdChapter: number | null,
+    latestChapter: number | null,
 }[];
 
 const processBatch = async (batch: batchType) => {
@@ -25,11 +26,12 @@ const processBatch = async (batch: batchType) => {
             } else {
                 mangaArr.push({
                     title: manga.title,
-                    latestChapter: parseFloat(res.chapter),
+                    mdChapter: parseFloat(res.chapter),
+                    latestChapter: null,
                 });
             }
         }));
-        //await fsCheck(resErrArr);
+        
         return {mangaArr, resErrArr};
 
     } catch (err) {

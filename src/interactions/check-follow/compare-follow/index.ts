@@ -1,17 +1,14 @@
 import getError from '../../../utils/get-error';
 import { Manganato } from '@specify_/mangascraper'
 import getChapterNumber from '../../../utils/get-chapter-num';
+import fsCheck from '../../../utils/fs-object-check';
 
 const scraper = new Manganato();
 
 type mangaArrType = {
     title: string,
-    latestChapter: number | null,
-}[];
-
-type returnArrType = {
-    title: string,
-    latestChapter: number | null,
+    mdChapter?: number | null;
+    latestChapter?: number | null;
 }[];
 
 type ManganatoManga = {
@@ -22,11 +19,10 @@ type ManganatoManga = {
     views: string;
     coverImage: string;
 }
- 
+
 export const compareChapter = async (mangaArr: mangaArrType, resErrArr: string[]) => {
-    try {
+    try { 
         let errArr = resErrArr; // manga that couldnt be found, or contained some err (eg: no latest chapter)
-        let returnArr:returnArrType = []; // manga that could be found
         
         let updatedArr: mangaArrType = []; // return object after comparison 
         let notUpdatedArr: mangaArrType = []; // return object after comparison
@@ -39,17 +35,13 @@ export const compareChapter = async (mangaArr: mangaArrType, resErrArr: string[]
                 if (!res || res.length === 0) {
                     return notFoundArr.push(manga.title);
                 }
-            
                 const scraperManga = (await scraper.getMangaMeta(res[0].url));
-
-                const title = scraperManga.title.main;
+        
+                // const title = scraperManga.title.main;
                 
                 if (scraperManga.chapters[0] && scraperManga.chapters[0].name) {
                     const latestChapter = await getChapterNumber(scraperManga.chapters[0].name);
-                    if (!latestChapter) {
-                        return errArr.push(manga.title);
-                    }
-                    returnArr.push({ title, latestChapter });
+                    return mangaArr.push({ title: manga.title, mdChapter: manga.mdChapter, latestChapter: latestChapter || null,});
                 } else {
                     return errArr.push(manga.title);
                 }
@@ -59,35 +51,24 @@ export const compareChapter = async (mangaArr: mangaArrType, resErrArr: string[]
             throw new Error(errMsg);
         }
 
+        let t: any[] = [];
+       
         try { // compare latest chapter from manganato with mangadex
-            await Promise.all(returnArr.map(async (manga) => { 
-                switch (true) {
-                    case !manga.latestChapter || Number.isNaN(manga.latestChapter)|| manga.latestChapter === null:
-                        errArr.push(manga.title);
-                        return
-                    break;
-    
-                    case manga.latestChapter != null && manga.latestChapter >= manga.latestChapter:
-                        updatedArr.push({title: manga.title, latestChapter: manga.latestChapter});
-                        return;
-                    break;
-    
-                    case manga.latestChapter != null && manga.latestChapter < manga.latestChapter:
-                        notUpdatedArr.push({title: manga.title, latestChapter: manga.latestChapter});
-                        return;
-                    break;
-    
-                    default:
-                        errArr.push(manga.title);
-                        return
-                    break;
+            await Promise.all(mangaArr.map(async (manga) => {
+                if (manga.mdChapter === null && manga.latestChapter === null) {
+                    notFoundArr.push(manga.title);
+                } else if (typeof manga.mdChapter !== 'undefined' && typeof manga.mdChapter === 'number' && manga.mdChapter < (manga.latestChapter ?? 0)) {
+                    notUpdatedArr.push({ title: manga.title, latestChapter: manga.latestChapter });
+                } else if (typeof manga.mdChapter !== 'undefined' && typeof manga.mdChapter === 'number' && manga.mdChapter >= (manga.latestChapter ?? 0)) {
+                    updatedArr.push({ title: manga.title, latestChapter: manga.latestChapter });
+                } else {
+                    errArr.push(manga.title);
                 }
             }));
         } catch (err) {
             const errMsg = getError(err);
             throw new Error(errMsg);
         }
-        
         return {updatedArr, notUpdatedArr, errArr, notFoundArr};
 
     } catch (err) {

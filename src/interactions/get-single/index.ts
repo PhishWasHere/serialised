@@ -10,7 +10,7 @@ export const getSingleCmd = async (title: string) => {
         const res = (await scraper.search(title))[0]; // returns object with title, url, and image
         
         if (!res) {
-            return {title: `${title} not found`, description: 'Please check for typos and try again', err: true};
+            return {title: `${title} not found`, description: 'Manga not found on Manganato. Check for typos and try again.', err: true};
         }
         
         const manga = (await scraper.getMangaMeta(res.url)).chapters[0].name; // returns the first chapter of the manga
