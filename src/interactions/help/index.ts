@@ -30,7 +30,7 @@ export const helpCmd = async (i: CommandInteraction) => {
             break;
           
             case error !== null:
-                return i.reply({embeds: [embedBuilder({ title: `Error's`, desc: `A common error you will encounter is that a lot of manga will have errors. This is because a sizable amount of manga in the MangaDex API doesn't have a chapter listed in the return. Because of this, the bot is unable to compare chapter numbers. \nIf you encounter a new error or a bug, let me know @silentwashere`, other: true })]});
+                return i.reply({embeds: [embedBuilder({ title: `Error's`, desc: `A common error you will encounter is that a few manga will return errors. \nMost of the time this happens because a manga is a one-shot, or a manga was not found on Manganato.`, other: true })]});
             break;
           
             default:

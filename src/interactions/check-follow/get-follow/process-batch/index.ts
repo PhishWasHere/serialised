@@ -1,16 +1,12 @@
 import * as MD from 'mangadex-full-api';
 import getError from "../../../../utils/get-error";
+import { mangaArrType } from '../../../../utils/types';
 
 type batchType = {
     title: string,
     id: string,
 }[];
 
-type mangaArrType = {
-    title: string,
-    mdChapter: number | null,
-    latestChapter: number | null,
-}[];
 
 const processBatch = async (batch: batchType) => {
     try {

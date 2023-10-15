@@ -7,7 +7,6 @@ import embedBuilder from '../utils/discord/embed';
 import modalBuilder from '../utils/discord/modal';
 import { getFollowCmd, getSingleCmd, helpCmd } from '../interactions';
 
-
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -133,20 +132,20 @@ client.on('interactionCreate', async (interaction) => {
 
 client.on('modalSubmit', async (i) => {
     try {
-        const timeout = 25000; // 25 seconds
+        const timeout = 210000; // 3.5 minutes 
 
         let isTimedOut = true;
     
-        // const timeoutPromise = new Promise((resolve, reject) => { // timeout function, if discord command takes too long to complete, returns timeout err
-        //     setTimeout(() => {
-        //         if (isTimedOut) {
-        //             reject(i.editReply({embeds: [embedBuilder({title: 'Error', desc: 'Request timed out. (you may have too many follows for the server to keep up)', err: true })]}));
-        //         }
-        //     }, timeout);
-        // });
+        const timeoutPromise = new Promise((resolve, reject) => { // timeout function, if discord command takes too long to complete, returns timeout err
+            setTimeout(() => {
+                if (isTimedOut) {
+                    reject(i.editReply({embeds: [embedBuilder({title: 'Error', desc: 'Request timed out. (you may have too many follows for the server to keep up)', err: true })]}));
+                }
+            }, timeout);
+        });
 
-        // await Promise.race([ // runs both functions, if discord command takes too long to complete, returns timeout err
-        //     (async () => {
+        await Promise.race([ // runs both functions, if discord command takes too long to complete, returns timeout err
+            (async () => {
                 switch (i.customId) {
                     case 'login':
                         
@@ -161,9 +160,9 @@ client.on('modalSubmit', async (i) => {
                     break;
 
                 }
-        //     })(),
-        //     timeoutPromise
-        // ]);
+            })(),
+            timeoutPromise
+        ]);
 
     } catch (err) {
         const errMsg = getError(err);

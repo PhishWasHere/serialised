@@ -7,7 +7,6 @@ import msgSplit from '../../utils/msg-split';
 const msgLen = 1800; // max length of a discord message
 export const getFollowCmd = async (username: string, password: string, i: ModalSubmitInteraction) => {
     try{
-
         const followResult = await getFollow(username, password);
 
         if (!followResult || 'err' in followResult) {

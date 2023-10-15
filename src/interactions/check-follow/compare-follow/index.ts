@@ -1,14 +1,9 @@
 import getError from '../../../utils/get-error';
 import { Manganato } from '@specify_/mangascraper'
 import getChapterNumber from '../../../utils/get-chapter-num';
+import { mangaArrType } from '../../../utils/types';
 
 const scraper = new Manganato();
-
-type mangaArrType = {
-    title: string,
-    mdChapter?: number | null;
-    latestChapter?: number | null;
-}[];
 
 type ManganatoManga = {
     title: string;
