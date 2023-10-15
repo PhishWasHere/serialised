@@ -1,6 +1,5 @@
 import * as MD from 'mangadex-full-api';
 import getError from "../../../../utils/get-error";
-import fsCheck from "../../../../utils/fs-object-check";
 
 type batchType = {
     title: string,

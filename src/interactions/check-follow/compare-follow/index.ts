@@ -1,7 +1,6 @@
 import getError from '../../../utils/get-error';
 import { Manganato } from '@specify_/mangascraper'
 import getChapterNumber from '../../../utils/get-chapter-num';
-import fsCheck from '../../../utils/fs-object-check';
 
 const scraper = new Manganato();
 
@@ -50,8 +49,6 @@ export const compareChapter = async (mangaArr: mangaArrType, resErrArr: string[]
             const errMsg = getError(err);
             throw new Error(errMsg);
         }
-
-        let t: any[] = [];
        
         try { // compare latest chapter from manganato with mangadex
             await Promise.all(mangaArr.map(async (manga) => {

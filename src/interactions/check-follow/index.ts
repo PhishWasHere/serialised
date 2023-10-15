@@ -3,16 +3,23 @@ import { ModalSubmitInteraction } from 'discord.js';
 import { getFollow } from './get-follow';
 import embedBuilder from '../../utils/discord/embed';
 import msgSplit from '../../utils/msg-split';
-import fsCheck from '../../utils/fs-object-check';
 
-const msgLen = 1800;
+const msgLen = 1800; // max length of a discord message
 export const getFollowCmd = async (username: string, password: string, i: ModalSubmitInteraction) => {
     try{
 
         const followResult = await getFollow(username, password);
 
-        if (!followResult) {
-            throw new Error('Failed to get follow result');
+        if (!followResult || 'err' in followResult) {
+            return i.editReply({
+                embeds: [
+                    embedBuilder({
+                        title: 'Error!',
+                        desc: followResult.err,
+                        err: true,
+                    }),
+                ],
+            });
         }
 
         const { updatedArr, notUpdatedArr, errArr, notFoundArr } = followResult;
