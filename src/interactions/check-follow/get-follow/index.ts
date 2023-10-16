@@ -3,25 +3,26 @@ import * as MD from 'mangadex-full-api';
 import { compareChapter } from '../compare-follow';
 import batchManga from './batch-manga';
 import processBatch from './process-batch';
+import User from '../../../model';
 
-export const getFollow= async (username: string, password: string) => {
+export const getFollow= async (username: string, password: string, user_id: string) => {
     try{
         try{
             await MD.login(username, password);
         } catch (err) {
-            return({ err: 'Failed to login to MangaDex' });
+            return await User.findOneAndUpdate({user_id}, { error: 'Failed to login to MangaDex' });
         }
 
-        const dataArr = (await MD.Manga.getFollowedManga((Infinity))).map((manga) => ({
+        const dataArr = (await MD.Manga.getFollowedManga((300))).map((manga) => ({ // limited to 300 manga
             title: manga.title,
             id: manga.id,
             })
         );
         const batches = await batchManga(dataArr);
 
-        const { mangaArr, resErrArr } = await processBatch(batches);
+        await processBatch(batches, user_id);
 
-        const comparedArr = await compareChapter(mangaArr, resErrArr);
+        const comparedArr = await compareChapter(user_id);
 
         return comparedArr;
     } catch (err) {

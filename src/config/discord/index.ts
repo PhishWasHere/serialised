@@ -2,10 +2,12 @@ import { GatewayIntentBits, Client, Partials} from 'discord.js';
 import { SlashCommandStringOption, SlashCommandBuilder } from '@discordjs/builders';
 import discordModals, {showModal } from 'discord-modals';
 import { cmdArr } from './commands';
-import getError from '../utils/get-error';
-import embedBuilder from '../utils/discord/embed';
-import modalBuilder from '../utils/discord/modal';
-import { getFollowCmd, getSingleCmd, helpCmd } from '../interactions';
+import getError from '../../utils/get-error';
+import embedBuilder from '../../utils/discord/embed';
+import modalBuilder from '../../utils/discord/modal';
+import { getFollowCmd, getSingleCmd, helpCmd } from '../../interactions';
+import User from '../../model';
+
 
 const client = new Client({
     intents: [
@@ -28,7 +30,6 @@ export const clientStart = async () => {
     }
 };
 discordModals(client);
-
 
 type cmdType = {
     name: string,
@@ -150,12 +151,25 @@ client.on('modalSubmit', async (i) => {
                     case 'login':
                         
                         const username = i.components[0].components[0].value.trim();
-                        const password = i.components[1].components[0].value.trim();             
+                        const password = i.components[1].components[0].value.trim();       
                         
                         await i.reply({embeds: [embedBuilder({ title: 'Checking...', desc: `Checking follow list for ${username}. This may take a minute.` })]});
                         
+                        try {
+                            const userData = new User({
+                                user_id: i.user.id, 
+                            });
+    
+                            await userData.save();
+                        } catch (err) {
+                            const errMsg = getError(err);
+                            return i.editReply({embeds: [embedBuilder({ title: 'Error', desc: errMsg, err: true })]});
+                        }
+
                         await getFollowCmd(username, password, i);        
                         
+                        // await User.findOneAndDelete({ user_id: i.user.id });
+
                         isTimedOut = false; // marks function as completed, doesnt run timeout func
                     break;
 
