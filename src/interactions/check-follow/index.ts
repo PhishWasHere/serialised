@@ -25,9 +25,9 @@ export const getFollowCmd = async (username: string, password: string, i: ModalS
             });
         }
 
-        const { updated_list, not_updated_list, error_list, not_found_list } = res;
+        const { not_updated_list, error_list, not_found_list, follow_list } = res;
 
-        const count = updated_list.length + not_updated_list.length + error_list.length + not_found_list.length;
+        const count = follow_list.length;
 
         await i.editReply({
             embeds: [
@@ -40,7 +40,7 @@ export const getFollowCmd = async (username: string, password: string, i: ModalS
        
         try { // not updated manga section
             if (not_updated_list.length > 0 ) {
-                const notUpdatedTitles = not_updated_list.map((manga) => `*${manga.title} - Chapter ${manga.latest_chapter}* **|**`); // *title - chapter* into string array
+                const notUpdatedTitles = not_updated_list.map((manga) => `*${manga.title} - Chapter ${manga.latest_chapter}* |`); // *title - chapter* into string array
                 const notUpdatedMessage = `**The following manga are not updated on MangaDex**: ${notUpdatedTitles.join(' ')}`; // join the string array into a single string
     
                 if (notUpdatedMessage.length <= msgLen) { // if the string is less than 1800 characters
@@ -62,7 +62,7 @@ export const getFollowCmd = async (username: string, password: string, i: ModalS
 
         try { // not found manga section
             if (not_found_list.length > 0 ) {
-                const notFoundTitles = not_found_list.map((manga) => `*${manga}* **|**`);
+                const notFoundTitles = not_found_list.map((manga) => `*${manga.title}* |`);
                 const notFoundMessage = `${notFoundTitles.join(' ')}`;
     
                 if (notFoundMessage.length <= msgLen) {
@@ -83,7 +83,7 @@ export const getFollowCmd = async (username: string, password: string, i: ModalS
 
         try { // error manga section
             if (error_list.length > 0 ) {
-                const errTitles = error_list.map((manga) => `*${manga}* **|**`);
+                const errTitles = error_list.map((manga) => `*${manga.title}* |`);
                 const errMessage = `${errTitles.join(' ')}`;
     
                 if (errMessage.length <= msgLen) {

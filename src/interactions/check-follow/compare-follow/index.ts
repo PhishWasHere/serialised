@@ -1,7 +1,6 @@
 import getError from '../../../utils/get-error';
 import { Manganato } from '@specify_/mangascraper'
 import getChapterNumber from '../../../utils/get-chapter-num';
-import { mangaArrType } from '../../../utils/types';
 import User from '../../../model';
 
 const scraper = new Manganato();
@@ -26,23 +25,20 @@ export const compareChapter = async (user_id: string) => {
 
         try { // get latest chapter from manganato
             await Promise.all(follow_list.map(async (manga) => {
-                const res: ManganatoManga[] = await scraper.search(manga.title);
+                const res: ManganatoManga[] = await scraper.search(manga.title); // search for manga
 
                 if (!res || res.length === 0) {
                     return not_found_list.push({ title: manga.title });
                 }
-                const scraperManga = await scraper.getMangaMeta(res[0].url);
+                const scraperManga = await scraper.getMangaMeta(res[0].url); // get manga meta (chapter name)
 
-                if (scraperManga.chapters[0] && scraperManga.chapters[0].name) {
-                    const latestChapter = await getChapterNumber(scraperManga.chapters[0].name);
+                if (scraperManga.chapters[0] && scraperManga.chapters[0].name) { // if chapter name exists
+                    const latestChapter = await getChapterNumber(scraperManga.chapters[0].name); // get chapter number
                     if (latestChapter === null || isNaN(latestChapter)) {
-                        console.log(`\x1b[31m> Failed to get chapter number for ${manga.title}\x1b[0m`);
+                        console.error(`\x1b[31m> Failed to get chapter number for ${manga.title}\x1b[0m`);
                     } 
-                    console.log("Before update:", manga.latest_chapter);
-                    manga.latest_chapter = latestChapter || undefined;                    
-                    console.log("After update:", manga.latest_chapter);
 
-                    if (manga.md_chapter === null && latestChapter=== null) {
+                    if (manga.md_chapter === null && latestChapter=== null) { // sorting statement
                         not_found_list.push({ title: manga.title });
                     } else if (manga.md_chapter! < latestChapter!) {
                         not_updated_list.push({ title: manga.title, latest_chapter: latestChapter! });
@@ -51,8 +47,6 @@ export const compareChapter = async (user_id: string) => {
                     } else {
                         error_list.push({ title: manga.title });
                     }
-
-                    // follow_list.push({ title: manga.title, md_chapter: manga.md_chapter || undefined, latest_chapter: latestChapter || undefined });
                 } else {
                     error_list.push({ title: manga.title });
                 }
@@ -63,26 +57,6 @@ export const compareChapter = async (user_id: string) => {
             const errMsg = getError(err);
             throw new Error(errMsg);
         }
-       
-        // try { // compare latest chapter from manganato with mangadex
-        //     await Promise.all(follow_list.map(async (manga) => {
-        //         if (manga.md_chapter === null && manga.latest_chapter === null) {
-        //             not_found_list.push({ title: manga.title });
-        //         } else if (manga.md_chapter! < manga.latest_chapter!) {
-        //             not_updated_list.push({ title: manga.title, latest_chapter: manga.latest_chapter! });
-        //         } else if (manga.md_chapter! >= manga.latest_chapter!) {
-        //             updated_list.push({ title: manga.title, latest_chapter: manga.latest_chapter! });
-        //         } else {
-        //             error_list.push({ title: manga.title });
-        //         }
-        //     }));
-        //     await userData.save();
-        // } catch (err) {
-        //     const errMsg = getError(err);
-        //     throw new Error(errMsg);
-        // }
-
-        // return;
 
     } catch (err) {
         const errMsg = getError(err);

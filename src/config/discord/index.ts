@@ -168,7 +168,7 @@ client.on('modalSubmit', async (i) => {
 
                         await getFollowCmd(username, password, i);        
                         
-                        // await User.findOneAndDelete({ user_id: i.user.id });
+                        await User.findOneAndDelete({ user_id: i.user.id });
 
                         isTimedOut = false; // marks function as completed, doesnt run timeout func
                     break;
