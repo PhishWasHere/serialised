@@ -1,7 +1,7 @@
 ## Serialised
 
 A Discrod bot that can look through your follows list on MangaDex to check if a manga is still being updated on the site.</br>
-This poject was made with: [TypeScript](https://www.typescriptlang.org/), [Discord.js](https://discord.js.org/)
+This poject was made with: [TypeScript](https://www.typescriptlang.org/), [Mongoose](https://mongoosejs.com/), [Discord.js](https://discord.js.org/)
 
 <details>
 <summary>Table of Contents</summary>
@@ -57,7 +57,7 @@ _______
 ## Note
 
 This bot uses a web scraper to fetch the latest chapter of a given manga. It sources data from Manganato. If a manga isn't available or hasn't been updated on Manganato, it will be added to the **Error** array.
-</br>If you decide to use the /check-follow command, the bot will consume a noticeable amount of network capacity for a few seconds. The bot also has a timeout function of 25 seconds. If your follow list is too long or if your internet connection is not great, you may trigger the timeout function and encounter an error.
+</br>Depending on how big your follow list is, the bot can take a few minutes to run the /check-follow command. The bot also has a timeout function of 5 minutes. If your follow list is too long or if your internet connection is not great, you may trigger the timeout function and encounter an error.
 
 
 ## Known Issues
@@ -65,9 +65,8 @@ This bot uses a web scraper to fetch the latest chapter of a given manga. It sou
 <details>
 <summary>Issues</summary>
 <ul> 
-    <li>The MangaDex API sometimes doesn't include the last chapter in its JSON response. I am looking for ways to work around this without using another web scraper.</li>
-    <li>Occasionally, the /check-follow command triggers the timeout function without executing the intended function. Its rare, but if it does occur, restart the bot.</li>
-    <li>The build command returns build errors. The issue is comming from discord-modals.</li>
+    <li>The MangaDex API sometimes returns an unexpected value, causing a manga to be filtered into the Error array</li>
+    <li>The tinmeout function around the modal submit function (src>config>discord>index>line 132) causes the server to crash.</li>
 </details>
 
 _______
