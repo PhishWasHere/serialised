@@ -20,7 +20,7 @@ const batchManga = async (dataArr: dataArrType) => {
         let i = 0, len = dataArr.length;
         
         while (i < len) {
-            const batch = dataArr.slice(i, i + batchSize);
+            const batch = dataArr.slice(i, i + batchSize); // slice the data array into batches
             batches.push(...batch); // spread the batch array into batches
             i += batchSize;
         }

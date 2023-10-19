@@ -1,7 +1,7 @@
 
 export type mangaArrType = {
     title: string,
-    mdChapter?: number | null;
-    latestChapter?: number | null;
+    md_chapter?: number | null;
+    latest_chapter?: number | null;
 }[];
 
