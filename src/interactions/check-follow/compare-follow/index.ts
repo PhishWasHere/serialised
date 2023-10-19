@@ -18,9 +18,8 @@ export const compareChapter = async (user_id: string) => {
     try { 
         const userData = await User.findOne({ user_id });
 
-        if (!userData) {
-            return ({ err: 'User not found' });
-        }
+        if (!userData) return ({ err: 'User not found' });
+        
         const { follow_list, updated_list, not_found_list, not_updated_list, error_list } = userData;
 
         try { // get latest chapter from manganato

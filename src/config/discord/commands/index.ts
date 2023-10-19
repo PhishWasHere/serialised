@@ -2,10 +2,6 @@ import { SlashCommandStringOption } from 'discord.js';
 
 export const cmdArr = [
     {
-      name: 'ping',
-      description: 'Ping!',
-    },
-    {
       name: 'help',
       description: 'Shows the help menu',
       options: [

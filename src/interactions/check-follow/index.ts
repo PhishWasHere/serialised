@@ -66,13 +66,13 @@ export const getFollowCmd = async (username: string, password: string, i: ModalS
                 const notFoundMessage = `${notFoundTitles.join(' ')}`;
     
                 if (notFoundMessage.length <= msgLen) {
-                    await i.followUp({embeds: [embedBuilder({ title:`(${not_found_list.length}) manga not found`, desc: notFoundMessage, warn: true })]});
+                    await i.followUp({embeds: [embedBuilder({ title:`Not Found (${not_found_list.length})`, desc: notFoundMessage, warn: true })]});
     
                 } else {
                     const chunks = msgSplit(notFoundMessage, msgLen);
     
                     for (const chunk of chunks) {
-                        await i.followUp({embeds: [embedBuilder({ title:`(${not_found_list.length}) manga not found`, desc: chunk, warn: true })]});
+                        await i.followUp({embeds: [embedBuilder({ title:`Not Found (${not_found_list.length})`, desc: chunk, warn: true })]});
                     }
                 }
             }
@@ -87,13 +87,13 @@ export const getFollowCmd = async (username: string, password: string, i: ModalS
                 const errMessage = `${errTitles.join(' ')}`;
     
                 if (errMessage.length <= msgLen) {
-                    await i.followUp({embeds: [embedBuilder({ title:`Encountered ${error_list.length} errors (use */help error* for more info).`, desc: errMessage, err: true })]});
+                    await i.followUp({embeds: [embedBuilder({ title:`Error (${error_list.length}) (use */help error* for more info).`, desc: errMessage, err: true })]});
     
                 } else {
                     const chunks = msgSplit(errMessage, msgLen);
     
                     for (const chunk of chunks) {
-                        await i.followUp({embeds: [embedBuilder({ title:`Encountered ${error_list.length} errors (use */help error* for more info).`, desc: chunk, err: true })]});
+                        await i.followUp({embeds: [embedBuilder({ title:`Error (${error_list.length}) (use */help error* for more info).`, desc: chunk, err: true })]});
                     }
                 }
             }

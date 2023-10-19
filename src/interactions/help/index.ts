@@ -18,7 +18,7 @@ export const helpCmd = async (i: CommandInteraction) => {
             break;
           
             case privacy !== null:
-                return i.reply({embeds: [embedBuilder({ title: 'Privacy', desc: `This bot does not store any data; however, if you plan to use the check-follow command, I would recommend setting up a temporary MangaDex password. The only data that is stored is the data that is stored by Discord.`, other: true })]});
+                return i.reply({embeds: [embedBuilder({ title: 'Privacy', desc: `This bot does not store any sensitive user data; however, if you plan to use the check-follow command, I would recommend setting up a temporary MangaDex password. The only data that is stored is the data that is stored by Discord.`, other: true })]});
             break;
           
             case updated !== null:
@@ -30,11 +30,11 @@ export const helpCmd = async (i: CommandInteraction) => {
             break;
           
             case error !== null:
-                return i.reply({embeds: [embedBuilder({ title: `Error's`, desc: `A common error you will encounter is that a few manga will return errors. \nMost of the time this happens because a manga is a one-shot, or a manga was not found on Manganato.`, other: true })]});
+                return i.reply({embeds: [embedBuilder({ title: `Error's`, desc: `A common error you will encounter is that a few manga will return errors. \nOften, this happens if MangaDex doesnt return an expected value when the bot tries to get a chapter number.`, other: true })]});
             break;
           
             default:
-              return i.reply({embeds: [embedBuilder({ title: 'Help', desc: `This is an open-source bot to check if the manga you're reading is still updated on MangaDex. \nYou can select an option by entering anything in the option field (e.g., /help <about: anything>).`, other: true })]});
+              return i.reply({embeds: [embedBuilder({ title: 'Help', desc: `This is an open-source bot to check if the manga you're reading is still updated on MangaDex. You can find the source code [here](https://github.com/PhishWasHere/serialised) \nYou can select an option by entering anything in the option field (e.g., /help <about: anything>).`, other: true })]});
             break;
           } 
 
