@@ -58,10 +58,10 @@ client.once('ready', async () => {
     console.log(`\x1b[35m> Ready!\x1b[0m Logged in as ${client.user?.tag}`);
     try {
         const commands = await client.application?.commands.fetch();//gets commands, then deletes them on start
-        // commands?.forEach(async (cmd) => {
-        //     console.log(`\x1b[31m> Deleting\x1b[0m: ${cmd.name}`);
-        //     await client.application?.commands.delete(cmd);
-        // });
+        commands?.forEach(async (cmd) => {
+            console.log(`\x1b[31m> Deleting\x1b[0m: ${cmd.name}`);
+            await client.application?.commands.delete(cmd);
+        });
 
         commandBuilder(cmdArr).forEach(async (cmd) => { //creates commands
             console.log(`\x1b[94m> Creating\x1b[0m: ${cmd.name}`);
