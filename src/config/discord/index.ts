@@ -1,12 +1,12 @@
-import { GatewayIntentBits, Client, Partials, Collection, InteractionType, Events } from 'discord.js';
+import { GatewayIntentBits, Client, Partials, Collection, InteractionType, GuildMember } from 'discord.js';
 import { SlashCommandStringOption, SlashCommandBuilder } from '@discordjs/builders';
 import { cmdArr } from './commands';
 import getError from '../../utils/get-error';
 import embedBuilder from '../../utils/discord/embed';
 import loginModalBuilder from '../../utils/discord/modal';
-import { getFollowCmd, getSingleCmd, helpCmd } from '../../interactions';
+import { getFollowCmd, getSingleCmd, helpCmd, play, stop } from '../../interactions';
 import User from '../../model';
-
+import DisTube from 'distube';
 
 const client = new Client({
     intents: [
@@ -16,6 +16,7 @@ const client = new Client({
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildMessageReactions,
         GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildVoiceStates
     ],
     partials: [Partials.Channel, Partials.Message],
 });
@@ -23,6 +24,16 @@ const client = new Client({
 interface CustomClient extends Client {
     modals?: Collection<string, any>;
 }
+
+const distube = new DisTube(client, {
+    emitNewSongOnly: true,
+    leaveOnEmpty: true,
+    leaveOnFinish: true,
+    leaveOnStop: true,
+    searchCooldown: 5,
+    searchSongs: 3,
+});
+distube.setMaxListeners(0);
 
 export const clientStart = async () => {
     try {
@@ -95,6 +106,8 @@ client.on('interactionCreate', async (interaction) => { // slash command interac
         if (!interaction.isCommand() || !interaction.isModalSubmit ) return;
 
         const { commandName, options } = interaction;
+        const member = interaction.member as GuildMember;
+        const channel = member!.voice.channel;
 
         switch (commandName) {
             case 'help':
@@ -115,8 +128,13 @@ client.on('interactionCreate', async (interaction) => { // slash command interac
                 await interaction.showModal(modal);
             break;
 
-            case 'check-list':
+            case 'play':
+                await play(interaction, distube, channel);         
             break;
+
+            case 'stop':
+                await stop(interaction, distube);
+            break
     
             default:
                 await interaction.reply({embeds: [embedBuilder({title: 'Error', desc: 'Something went wrong', err: true })]});

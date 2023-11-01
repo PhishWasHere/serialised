@@ -46,14 +46,18 @@ export const cmdArr = [
       name: 'check-follow',
       description: 'checks your follow list to see if any manga is updated/being updated on MangaDex',
     },
-    // {
-    //   name: 'check-list',
-    //   description: 'checks a MangaDex list to see if any manga is updated/being updated on MangaDex (the list must be public)',
-    //   options: [
-    //     new SlashCommandStringOption()
-    //       .setName('list link')
-    //       .setDescription('The link for the public list')
-    //       .setRequired(true),
-    //   ]
-    // }
+    {
+      name: 'play',
+      description: 'plays a song',
+      options: [
+        new SlashCommandStringOption()
+          .setName('title')
+          .setDescription('Youtube url or title')
+          .setRequired(true),
+      ]
+    },
+    {
+      name: 'stop',
+      description: 'stops the music',
+    }
 ];
