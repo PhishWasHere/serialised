@@ -31,4 +31,3 @@ export const play = async (i: CommandInteraction, distube: DisTube, channel: Voi
         throw new Error(errMsg);
     }
 };
-
