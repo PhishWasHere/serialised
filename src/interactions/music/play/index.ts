@@ -22,8 +22,9 @@ export const play = async (i: CommandInteraction, distube: DisTube, channel: Voi
         });
 
         const song = distube.getQueue(i.guildId!)!.songs[0];
-        
-        i.editReply({embeds: [embedBuilder({ title: 'Playing!', desc: `Playing ${song.name}`, success: true })]});
+        const thumbnail = song.thumbnail || null;
+
+        i.editReply({embeds: [embedBuilder({ title: 'Playing!', desc: `Playing ${song.name}`, image: thumbnail, success: true })]});
 
     } catch (err) {
         const errMsg = getError(err);
