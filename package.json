@@ -6,7 +6,7 @@
     "scripts": {
         "start": "node dist/server.js",
         "dev": "nodemon src/server.ts",
-        "build": "tsc"
+        "build": "tsc --skipLibCheck"
     },
     "dependencies": {
         "@specify_/mangascraper": "^3.6.0",
