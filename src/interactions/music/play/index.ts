@@ -17,14 +17,13 @@ export const play = async (i: CommandInteraction, distube: DisTube, channel: Voi
 
         await i.reply({embeds: [embedBuilder({ title: 'Searching...', desc: `Searching for ${input}` })]});
 
-        await distube.play(channel, input, {
+        distube.play(channel, input, { // might need to remove the await
             metadata: i,
         });
 
-        const song = distube.getQueue(i.guildId!)!.songs[0];
-        const thumbnail = song.thumbnail || null;
-
-        i.editReply({embeds: [embedBuilder({ title: 'Playing!', desc: `Playing ${song.name}`, image: thumbnail, success: true })]});
+        distube.on('playSong', (queue, song) => {
+            i.editReply({embeds: [embedBuilder({ title: 'Playing!', desc: `Playing ${song.name}`, image: song.thumbnail, success: true })]});   
+        });
 
     } catch (err) {
         const errMsg = getError(err);

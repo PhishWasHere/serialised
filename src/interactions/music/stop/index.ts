@@ -10,7 +10,7 @@ export const stop = async (i: CommandInteraction, distube: DisTube) => {
             return i.reply({embeds: [embedBuilder({ title: 'Error', desc: 'There is nothing in the queue', err: true })]});
         }
         distube.stop(i.guildId!);
-        i.reply({embeds: [embedBuilder({ title: 'Stopped!', desc: `Stopped playing music`, success: true })]});
+        i.reply({embeds: [embedBuilder({ title: 'Stopped!', desc: `Stopped playing music`, warn: true })]});
     } catch (err) {
         const errMsg = getError(err);
         throw new Error(errMsg);
