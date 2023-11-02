@@ -1,8 +1,8 @@
 FROM node:18.18.0
-WORKDIR /src
-COPY package.json package.json
-COPY package-lock.json package-lock.json
-RUN npm i
+WORKDIR /
+COPY package*.json ./
+COPY tsconfig.json ./
+RUN npm install
 COPY . .
 EXPOSE 8000
-CMD ["npm", "start"]
+CMD ["npm","run", "dev-docker"]
