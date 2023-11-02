@@ -17,12 +17,14 @@ export const play = async (i: CommandInteraction, distube: DisTube, channel: Voi
 
         await i.reply({embeds: [embedBuilder({ title: 'Searching...', desc: `Searching for ${input}` })]});
 
-        distube.play(channel, input, { // might need to remove the await
+        await distube.play(channel, input, {
             metadata: i,
         });
 
-        distube.on('playSong', (queue, song) => {
-            i.editReply({embeds: [embedBuilder({ title: 'Playing!', desc: `Playing ${song.name}`, image: song.thumbnail, success: true })]});   
+        i.deleteReply();
+
+        distube.on('playSong', async (queue, song) => {
+            await i.reply({embeds: [embedBuilder({ title: 'Playing!', desc: `Playing ${song.name}`, image: song.thumbnail, success: true })]});   
         });
 
     } catch (err) {
