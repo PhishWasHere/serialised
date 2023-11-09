@@ -133,19 +133,7 @@ client.on('interactionCreate', async (interaction) => { // slash command interac
             break;
 
             case 'play':
-                const input = options.data[0].value?.toString().trim();
-                interaction.reply({embeds: [embedBuilder({ title: 'Playing!', desc: `Playing ${input}`, success: true })]});   
-
-                await distube.play(channel!, input!, {
-                    metadata: interaction,
-                });
-
-                distube.on('playSong', (queue, song) => {
-                    console.log('playing');
-                    interaction.editReply({embeds: [embedBuilder({ title: 'Playing!', desc: `Playing ${song.name}`, image: song.thumbnail, success: true })]});   
-                });
-
-                // await play(interaction, distube, channel);
+                await play(interaction, distube, channel);
             break;
 
             case 'stop':
