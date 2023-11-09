@@ -7,12 +7,12 @@ import User from '../../../model';
 
 export const getFollow= async (username: string, password: string, user_id: string) => {
     try{
-        try{
-            await MD.login(username, password);
+        try{ // if login fails, return an error
+            await MD.login(username, password);      
         } catch (err) {
             return await User.findOneAndUpdate({user_id}, { error: 'Failed to login to MangaDex' });
         }
-
+        
         const dataArr = (await MD.Manga.getFollowedManga((300))).map((manga) => ({ // limited to 300 manga
             title: manga.title,
             id: manga.id,

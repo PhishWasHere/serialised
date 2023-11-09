@@ -25,7 +25,7 @@ export const getFollowCmd = async (username: string, password: string, i: ModalS
             });
         }
 
-        const { not_updated_list, error_list, not_found_list, follow_list } = res;
+        const { not_updated_list, error_list, not_found_list, follow_list, error } = res;
 
         const count = follow_list.length;
 
@@ -38,6 +38,16 @@ export const getFollowCmd = async (username: string, password: string, i: ModalS
             ],
         });
        
+        if (error) { // if there is an error return an error embed
+            try {
+                return await i.followUp({embeds: [embedBuilder({ title: 'Error', desc: error, err: true })]}); // send the message
+            } catch (err) {
+                const errMsg = getError(err);
+                throw new Error(errMsg);
+            }
+        }
+
+
         try { // not updated manga section
             if (not_updated_list.length > 0 ) {
                 const notUpdatedTitles = not_updated_list.map((manga) => `*${manga.title} - Chapter ${manga.latest_chapter}* |`); // *title - chapter* into string array

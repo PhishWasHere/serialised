@@ -6,7 +6,7 @@ import embedBuilder from '../../../utils/discord/embed';
 export const play = async (i: CommandInteraction, distube: DisTube, channel: VoiceBasedChannel | null) => {
     try {
         const input = i.options.get('title')?.value?.toString().trim();
-
+        
         if (!input) {
             return i.reply({embeds: [embedBuilder({ title: 'Error', desc: 'No input provided', err: true })]});
         }
@@ -17,7 +17,7 @@ export const play = async (i: CommandInteraction, distube: DisTube, channel: Voi
 
         await i.reply({embeds: [embedBuilder({ title: 'Searching...', desc: `Searching for ${input}` })]});
 
-        distube.play(channel, input, { // might need to remove the await
+        distube.play(channel, input, {
             metadata: i,
         });
 

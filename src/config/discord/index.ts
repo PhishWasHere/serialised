@@ -28,12 +28,16 @@ interface CustomClient extends Client {
 const distube = new DisTube(client, {
     emitNewSongOnly: true,
     leaveOnEmpty: true,
-    leaveOnFinish: true,
+    // leaveOnFinish: true,
     leaveOnStop: true,
     searchCooldown: 5,
     searchSongs: 3,
 });
 distube.setMaxListeners(0);
+
+distube.on('finish', (queue) => { // when song finishes, leave channel (leaveOnFinish doesn't work)
+    distube.stop(queue);
+})
 
 export const clientStart = async () => {
     try {
@@ -129,7 +133,19 @@ client.on('interactionCreate', async (interaction) => { // slash command interac
             break;
 
             case 'play':
-                await play(interaction, distube, channel);         
+                const input = options.data[0].value?.toString().trim();
+                interaction.reply({embeds: [embedBuilder({ title: 'Playing!', desc: `Playing ${input}`, success: true })]});   
+
+                await distube.play(channel!, input!, {
+                    metadata: interaction,
+                });
+
+                distube.on('playSong', (queue, song) => {
+                    console.log('playing');
+                    interaction.editReply({embeds: [embedBuilder({ title: 'Playing!', desc: `Playing ${song.name}`, image: song.thumbnail, success: true })]});   
+                });
+
+                // await play(interaction, distube, channel);
             break;
 
             case 'stop':
@@ -181,6 +197,8 @@ client.on('interactionCreate', async (i) => { // modal submit interaction
                             await userData.save();
         
                             await getFollowCmd(username, password, i);
+
+                            await User.findOneAndDelete({ user_id: i.user.id });
                             
                         } catch (err) {
                             isTimedOut = false;
