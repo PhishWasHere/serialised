@@ -1,5 +1,8 @@
 ## Serialised
 
+Moving to archive, as Discord.js is a pain to work with.
+If any of the code is usefull, feel free to copy/paste.
+
 A Discrod bot that can look through your follows list on MangaDex to check if a manga is still being updated on the site.</br>
 This poject was made with: [TypeScript](https://www.typescriptlang.org/), [Mongoose](https://mongoosejs.com/), [Discord.js](https://discord.js.org/)
 
