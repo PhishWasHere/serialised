@@ -1,11 +1,11 @@
-module com.jdabot.demo {
+module com.jda.serialised {
     requires javafx.controls;
     requires javafx.fxml;
-    requires org.apache.commons.cli;
     requires net.dv8tion.jda;
     requires annotations;
+    requires org.json;
 
 
-    opens com.jdabot.demo to javafx.fxml;
-    exports com.jdabot.demo;
+    opens com.jda.serialised to javafx.fxml;
+    exports com.jda.serialised;
 }
