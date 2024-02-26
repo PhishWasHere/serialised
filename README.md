@@ -1,6 +1,6 @@
 ## Serialised
 
-Moving to archive, as Discord.js is a pain to work with.
+Discord.js is a pain to work with. The most updated code will be in the Java-Rework Branch
 If any of the code is usefull, feel free to copy/paste.
 
 A Discrod bot that can look through your follows list on MangaDex to check if a manga is still being updated on the site.</br>
